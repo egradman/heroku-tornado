@@ -1,1 +1,1 @@
-web: ./bin/python server
+web: python server

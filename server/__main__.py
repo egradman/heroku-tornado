@@ -10,8 +10,8 @@ import os
 import re
 
 # parse the mongo connection URL
-logging.debug(os.getenv('MONGOHQ_URL', "http://localhost"))
-r=re.match(r"mongodb://((?P<dbuser>\w+):(?P<dbpass>\w+)@)?(?P<host>[\w.]+)(:(?P<port>\d+))?/(?P<dbname>\w+)", "mongodb://localhost/test")
+mongodb_url = os.getenv('MONGOHQ_URL', "http://localhost/test")
+r=re.match(r"mongodb://((?P<dbuser>\w+):(?P<dbpass>\w+)@)?(?P<host>[\w.]+)(:(?P<port>\d+))?/(?P<dbname>\w+)", mongodb_url)
 
 mdb_connection_params = dict(
   pool_id=r.group('dbname'),

@@ -10,7 +10,7 @@ import os
 import re
 
 # parse the mongo connection URL
-mongodb_url = os.getenv('MONGOHQ_URL', "http://localhost/test")
+mongodb_url = os.getenv('MONGOHQ_URL', "mongodb://localhost/test")
 r=re.match(r"mongodb://((?P<dbuser>\w+):(?P<dbpass>\w+)@)?(?P<host>[\w.]+)(:(?P<port>\d+))?/(?P<dbname>\w+)", mongodb_url)
 
 mdb_connection_params = dict(
@@ -25,12 +25,12 @@ mdb_connection_params = dict(
 )
 
 class Handler(tornado.web.RequestHandler):
-    @property
-    def db(self):
-      if not hasattr(self, '_db'):
-        logging.info(str(mdb_connection_params))
-        self._db = asyncmongo.Client(**mdb_connection_params)
-        return self._db
+  @property
+  def db(self):
+    if not hasattr(self, '_db'):
+      logging.info(str(mdb_connection_params))
+      self._db = asyncmongo.Client(**mdb_connection_params)
+      return self._db
 
 class MainHandler(Handler):
   @asynchronous
@@ -42,13 +42,14 @@ class MainHandler(Handler):
       self.finish()
 
 application = tornado.web.Application([
-    (r"/", MainHandler),
+  (r"/", MainHandler),
 ], debug=True)
 
 if __name__ == "__main__":
-    tornado.options.parse_command_line() 
+  tornado.options.parse_command_line() 
 
-    port = int(os.getenv('PORT', 8000))
-    application.listen(port)
-    logging.info("starting torando web server on port %d", port) 
-    tornado.ioloop.IOLoop.instance().start()
+  port = int(os.getenv('PORT', 8000))
+  application.listen(port)
+  logging.info("starting torando web server on port %d", port) 
+  logging.info("mongodb connection %s", mdb_connection_params) 
+  tornado.ioloop.IOLoop.instance().start()
